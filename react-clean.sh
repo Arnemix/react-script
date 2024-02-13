@@ -13,7 +13,7 @@ npx create-react-app "$lowercaseFileName" || exit
 cd "$lowercaseFileName" || exit
 
 echo "Téléchargement des dépendences ..."
-npm install sass react-router-dom chokidar fs-extra react-icons recoil
+npm install sass react-router-dom chokidar fs-extra react-icons react-redux @reduxjs/toolkit
 
 # Supprimer des fichiers et dossiers inutiles
 rm -f ./public/favicon.ico \
@@ -34,6 +34,8 @@ mkdir -p ./src/assets
 mkdir -p ./src/pages
 mkdir -p ./src/layouts
 mkdir -p ./src/data
+mkdir -p ./src/redux/store
+mkdir -p ./src/redux/slices
 
 # Créer des fichiers
 touch ./src/index.scss
@@ -43,6 +45,18 @@ touch ./src/App.scss
 > ./src/index.scss
 > ./src/App.js
 > ./src/App.scss
+touch ./src/redux/store/store.js
+
+# Ajouter la base du store Redux
+echo "import { configureStore } from '@reduxjs/toolkit';
+import todoReducer from './slices/todoSlice';
+
+export default configureStore({
+    reducer: {
+        // Add reducers
+    },
+});
+" >> ./src/redux/store/store.js
 
 # Ajouter du contenu à App.js
 echo "import './App.scss';
@@ -84,10 +98,14 @@ echo "import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
+import { Provider } from 'react-redux';
+import store from './redux/store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App />
+    <Provider store={store}>
+        <App />
+    </Provider>
 );
 " >> ./src/index.js
 
